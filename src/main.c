@@ -5,7 +5,6 @@
 #include "state/state.h"
 #include <winbase.h>
 
-#define DEBUG
 
 #ifndef DEBUG
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
