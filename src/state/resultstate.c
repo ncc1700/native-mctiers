@@ -77,9 +77,11 @@ VOID ResultState(){
     }
     INT button = RGUIDrawButton("Go Back", 10, final + 70, 70, 50);
     if(button == 1){
+        ChangeState(1);
         SetWindowTitle("Native MCTiers");
         RGUISetIconToDefault();
-        ChangeState(3);
+        UnloadTexture(text);
+        UnloadImage(img);
         for(int i = 0; i < tierAmount; i++){
             sprintf_s(tierar.tierar[tierAmount].tier, 5, "");
             sprintf_s(tierar.tierar[tierAmount].peakTier, 30, "");
@@ -87,11 +89,9 @@ VOID ResultState(){
             strcpy_s(tierar.name, 16, "");
         }
         tierAmount = 0;
-        ChangeState(0);
         init = false;
         scroll = 0;
-        UnloadTexture(text);
-        UnloadImage(img);
+        ChangeState(0);
     }
 }
 

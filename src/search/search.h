@@ -8,7 +8,6 @@
 
 #include "../typedef.h"
 
-VOID BeginSearch(PCHAR username);
-
+VOID BeginSearch(PCHAR username, UINT8 type);
 
 #endif

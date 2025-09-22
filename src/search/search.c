@@ -16,6 +16,7 @@
 
 static CHAR uuid[40];
 static HANDLE hThread = NULL;
+static UINT8 searchType = 0;
 
 
 
@@ -101,7 +102,13 @@ DWORD WINAPI SearchThreadEntry(LPVOID stuff){
     }
     BeginTier(username);
     CHAR url[70];
-    sprintf_s(url, 70, "https://mctiers.com/api/rankings/%s", uuid);
+    if(searchType == 0){
+        sprintf_s(url, 70, "https://mctiers.com/api/rankings/%s", uuid);
+    } else if(searchType == 2){
+        sprintf_s(url, 70, "https://subtiers.net/api/rankings/%s", uuid);
+    } else {
+        sprintf_s(url, 70, "https://pvptiers.com/api/rankings/%s", uuid);
+    }
     naettOption* option;
     naettReq* req = 
         naettRequestWithOptions(url, 0, NULL);
@@ -161,6 +168,7 @@ DWORD WINAPI SearchThreadEntry(LPVOID stuff){
 }
 
 
-VOID BeginSearch(PCHAR username){
+VOID BeginSearch(PCHAR username, UINT8 type){
+    searchType = type;
     CreateThread(NULL, 0, SearchThreadEntry, (LPVOID)username, 0, 0);
 }

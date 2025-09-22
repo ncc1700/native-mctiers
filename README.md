@@ -13,7 +13,7 @@ you don't need VS itself, but you do need MSVC to compile this
 
 when you have that installed, also make sure you have xmake installed
 
-open the x64 native command prompt for VS(whatever version you have installed)
+open the x64 native command prompt for VS(whatever version you have installed), or anywhere where msvc is located at
 
 when that happens, clone this repository and run `run.bat`, and if everything is correct it should build
 

@@ -2002,7 +2002,7 @@ int GuiButton(Rectangle bounds, const char *text)
         {
             if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) state = STATE_PRESSED;
             else state = STATE_FOCUSED;
-
+            if(state == STATE_FOCUSED) result = 2;
             if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) result = 1;
         }
     }
