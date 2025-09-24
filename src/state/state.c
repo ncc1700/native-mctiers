@@ -1,9 +1,5 @@
 #include "state.h"
-#include "eastereggstate.h"
-#include "loadingstate.h"
-#include "resultstate.h"
 #include "searchstate.h"
-#include "errorstate.h"
 
 
 
@@ -20,16 +16,16 @@ VOID RenderStates(){
             SearchState();
             break;
         case 1:
-            LoadingState();
+            //LoadingState();
             break;
         case 2:
-            ResultState();
+            //ResultState();
             break;
         case 3:
-            ErrorState();
+            //ErrorState();
             break;
         case 4:
-            EasterEggState();
+            //EasterEggState();
             break;
         default:
             ChangeState(0);

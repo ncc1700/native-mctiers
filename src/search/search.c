@@ -12,13 +12,14 @@
 #include "../state/state.h"
 #include <Shlwapi.h>
 #include <time.h>
+#include <winbase.h>
+#include <winnt.h>
+#include <winternl.h>
 #include <winuser.h>
 
 static CHAR uuid[40];
 static HANDLE hThread = NULL;
 static UINT8 searchType = 0;
-
-
 
 static inline BOOL FillUUID(PCHAR username){
     CHAR url[70];
@@ -81,6 +82,7 @@ static inline BOOL GetPlayerHead(PCHAR username){
     }
     BOOL result = WriteFile(hFile, body, bodyLength, NULL, NULL);
     if(result == FALSE){
+        printf("failed with status of %lu\n", GetLastError());
         return FALSE;
     }
     CloseHandle(hFile);

@@ -1,37 +1,54 @@
-#include "extern/naett/naett.h"
-#include "extern/raylib/raylib.h"
-#include "rguiabs.h"
 
-#include "state/state.h"
-#include <winbase.h>
+#include <Windows.h>
+#include <wchar.h>
 
-#define DEBUG
+
+
+LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
+    switch (uMsg) {
+        case WM_PAINT:
+            PAINTSTRUCT s;
+            BeginPaint(hWnd, &s);
+            HDC dc = GetDC(hWnd);
+            HBRUSH b = CreateSolidBrush(RGB(255, 90, 0));
+            SelectObject(dc, b);
+            Rectangle(dc, 50, 50, 100, 100);
+            DeleteDC(dc);
+            DeleteObject(b);
+            wprintf(L"h");
+            EndPaint(hWnd, &s);
+            break;
+        case WM_CLOSE:
+            CloseWindow(hWnd);
+            ExitProcess(0);
+            break;
+    }
+    return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+}
 
 #ifndef DEBUG
-INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+INT wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 #else 
-INT main(INT argc, PCHAR argv[])
+INT wmain(INT argc, PWCHAR argv[])
 #endif
 {
-    naettInit(NULL);
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetTraceLogLevel(LOG_ERROR);
-    SetTargetFPS(60);
-    // what I have to do for res awareness....
-    InitWindow(900, 1200, "Initial Window, if you see this please report it");
-    int x = GetMonitorWidth(GetCurrentMonitor());
-    int y = GetMonitorHeight(GetCurrentMonitor());
-    CloseWindow();
-    InitWindow(x / 3, y / 1.5, "Native Mctiers");
-    RGUIInit();
-    while(!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(RGUIGetBackgroundColor());
-        RenderStates();
-        EndDrawing();
+    HICON icon = LoadIconW(hInstance, L"DEFAULTICON");
+    MSG msg;
+    WNDCLASSW wc;
+    wc.lpszClassName = L"Native-MCTiers";
+    wc.lpfnWndProc = WndProc;
+    wc.hIcon = icon;
+    
+    RegisterClassW(&wc);
+    HWND hwnd = CreateWindowExW(0, L"Native-MCTiers", 
+        L"Native MCTiers", 
+        WS_TILEDWINDOW | WS_VISIBLE, 
+        CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, hInstance, NULL);
+    ShowWindow(hwnd, SW_SHOW);
+    while(GetMessageW(&msg, hwnd, 0, 0)){
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
-    RGUICleanup();
-    CloseWindow();
-
+    CloseWindow(hwnd);
     return 0;
 }
