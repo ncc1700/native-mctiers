@@ -23,10 +23,6 @@ when that happens, clone this repository and run `run.bat`, and if everything is
 
 [Naett](https://github.com/erkkah/naett) (for HTTP)
 
-[Raylib](https://www.raylib.com/) (for Windowing and Drawing)
-
-[RayGUI](https://github.com/raysan5/raygui) (for making a decent GUI in Raylib)
-
 [cJSON](https://github.com/DaveGamble/cJSON) (for JSON parsing)
 
 

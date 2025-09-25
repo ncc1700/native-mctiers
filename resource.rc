@@ -11,12 +11,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      "Najib Ahmed"
             VALUE "FileDescription",  "Native McTiers"
-            VALUE "FileVersion",      "0, 1, 0, 0"
+            VALUE "FileVersion",      "0, 6, 0, 0"
             VALUE "InternalName",     "mctiers-gui"
             VALUE "LegalCopyright",   "Copyright 2025 Najib Ahmed and Native McTiers Contributers. All Rights Reserved."
             VALUE "OriginalFilename", "nativemctiers.exe"
             VALUE "ProductName",      "Native McTiers"
-            VALUE "ProductVersion",   "0, 1, 0, 0"
+            VALUE "ProductVersion",   "0, 6, 0, 0"
             VALUE "LegalTrademarks",  "Native McTiers"
             VALUE "Comments",         ""
         END

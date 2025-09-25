@@ -10,6 +10,8 @@
 
 char searchBuffer[17];
 
+
+
 VOID SearchState(){
     // static Texture2D mctierstext;
     // static Texture2D pvptierstext;
