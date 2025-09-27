@@ -15,6 +15,7 @@ VOID RGUISetIconToDefault();
 VOID RGUIDrawText(const PCHAR text, INT x, INT y, FLOAT fontSize, BOOL isError);
 VOID RGUIDrawTextEx(const PCHAR text, INT x, INT y, FLOAT fontSize, int property, BOOL isError);
 Color RGUIGetBackgroundColor();
+INT RGUIDropDownBox(const PCHAR text, INT x, INT y, INT width, INT height, int* active, BOOL editMode);
 Color RGUIGetTextColor();
 INT RGUIDrawButton(const PCHAR text, INT x, INT y, INT width, INT height);
 INT RGUIDrawTextBox(const PCHAR text, INT x, INT y, INT width, INT height, FLOAT fontSize, BOOL editMode);

@@ -36,6 +36,11 @@ Color RGUIGetBackgroundColor(){
     return GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 }
 
+INT RGUIDropDownBox(const PCHAR text, INT x, INT y, INT width, INT height, int* active, BOOL editMode){
+    Rectangle pos = {x, y, width, height};
+    return GuiDropdownBox(pos, text, active, editMode);
+}
+
 Color RGUIGetTextColor(){
     return GetColor(GuiGetStyle(TEXT, TEXT_COLOR_NORMAL));
 }
