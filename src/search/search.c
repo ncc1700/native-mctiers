@@ -120,11 +120,13 @@ DWORD WINAPI SearchThreadEntry(LPVOID stuff){
         ChangeState(3);
         return -1;
     }
-    int bodyLength = 0;
+    INT bodyLength = 0;
     const PCHAR body = (const PCHAR)naettGetBody(res, &bodyLength);
     printf("%s\n", body);
     cJSON *json = cJSON_Parse(body);
     cJSON *specific = NULL;
+    INT points = -1;
+    if(searchType == 0) points = 0;
     cJSON_ArrayForEach(specific, json){
         Tiers tier;
         CHAR res[32];
@@ -149,6 +151,35 @@ DWORD WINAPI SearchThreadEntry(LPVOID stuff){
         cJSON* peak_tier = cJSON_GetObjectItem(specific, "peak_tier");
         cJSON* peakhorl = cJSON_GetObjectItem(specific, "peak_pos");
         cJSON* isRetired = cJSON_GetObjectItem(specific, "retired");
+        if(searchType == 0){
+            switch(peak_tier->valueint){
+                case 1: {
+                    INT amount = peakhorl->valueint ? 45 : 60;
+                    points += amount;
+                    break;
+                }
+                case 2: {
+                    INT amount = peakhorl->valueint ? 20 : 30;
+                    points += amount;
+                    break;
+                }
+                case 3: {
+                    INT amount = peakhorl->valueint ? 6 : 10;
+                    points += amount;
+                    break;
+                }
+                case 4: {
+                    INT amount = peakhorl->valueint ? 3 : 4;
+                    points += amount;
+                    break;
+                }
+                case 5: {
+                    INT amount = peakhorl->valueint ? 1 : 2;
+                    points += amount;
+                    break;
+                }
+            }
+        }
         CHAR level = horl->valueint ? 'L' : 'H';
         CHAR peaklevel = peakhorl->valueint ? 'L' : 'H';
         sprintf_s(tier.tier, 5, "%cT%d", level, curtier->valueint);
@@ -161,6 +192,9 @@ DWORD WINAPI SearchThreadEntry(LPVOID stuff){
         sprintf_s(tier.peakTier, 30, "(peak: %cT%d, %s)", peaklevel, peak_tier->valueint, retiredS);
         PlaceTier(tier);
     }
+    CHAR pointstr[30];
+    sprintf_s(pointstr, 30, "POINTS: %d", points);
+    PlacePoints(pointstr);
     cJSON_Delete(json);
     free((void*)body);
     ChangeState(2);

@@ -19,6 +19,7 @@ typedef struct _Tiers {
 
 VOID BeginTier(PCHAR name);
 VOID PlaceTier(Tiers tier);
+VOID PlacePoints(char* points);
 VOID ResultState();
 
 

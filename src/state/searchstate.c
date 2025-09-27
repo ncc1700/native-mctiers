@@ -18,7 +18,8 @@ VOID SearchState(){
     }
     static BOOL edit = FALSE;
     static INT active;
-    INT res = RGUIDropDownBox("MCTiers;PVPTiers;SubTiers", 10, 10, 100, 30, &active, edit);
+    RGUIDrawText("Search at:", 10, 10, 30, FALSE);
+    INT res = RGUIDropDownBox("MCTiers;PVPTiers;SubTiers", 150, 10, 100, 35, &active, edit);
     if(res == 1){
         if(edit == FALSE) edit = TRUE;
         else edit = FALSE;
@@ -33,15 +34,20 @@ VOID SearchState(){
         sprintf_s(searchBuffer, 17, "");
     }
     
-    INT buttonmctiers = RGUIDrawButton("Check Rank", GetScreenWidth() / 2 - 80, GetScreenHeight() / 2 + 30, 150, 50);
+    INT button = RGUIDrawButton("Check Rank", GetScreenWidth() / 2 - 80, GetScreenHeight() / 2 + 30, 150, 50);
     
-    if(buttonmctiers == 1){
+    if(button == 1 || IsKeyPressed(KEY_ENTER)){
         init = FALSE;
         ChangeState(1);
         BeginSearch(searchBuffer, active);
     }
     
-
+    if(button == 2){
+        int x = GetMouseX() + 10;
+        int y = GetMouseY() + 10;
+        RGUIDrawWindow("Test Window for something else...", x, y, 300, 100);
+        RGUIDrawText("will be used in our lovely\nresult page very soon ;)", x + 40, y + 40, 20, FALSE);
+    }
     // RGUIDrawText("THIS IS BETA SOFTWARE\nIF THERE IS ANY ISSUES MAKE AN ISSUE\nIN THE GITHUB\ngithub.com/vmwarehater/native-mctiers/issues", 
     //                         10, 10,30, FALSE);    
 }

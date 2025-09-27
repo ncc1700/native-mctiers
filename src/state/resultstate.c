@@ -14,6 +14,8 @@ typedef struct _TierArray {
 static TierArray tierar;
 static INT tierAmount = 0;
 
+char amPoints[30];
+
 
 VOID BeginTier(PCHAR name){
     strcpy_s(tierar.name, 17, name);
@@ -30,6 +32,13 @@ VOID PlaceTier(Tiers tier){
     tierAmount++;
 }
 
+VOID PlacePoints(char* points){
+    if(strlen(points) >= 30 || points == NULL){
+        sprintf_s(amPoints, 30, "POINTS: ERROR");
+        return;
+    }
+    strcpy_s(amPoints, 30, points);
+}
 VOID ResultState(){
     static FLOAT scroll = 0;
     static BOOL init = false;
@@ -52,7 +61,9 @@ VOID ResultState(){
     DrawTextureEx(text, pos, 0, 1, WHITE);
     
     UINT64 final = 0;
+
     RGUIDrawText(tierar.name, 10, scroll + 10,  50, FALSE);
+    RGUIDrawText(amPoints, 10, scroll + 70, 30, FALSE);
     if(GetMouseWheelMoveV().y != 0){
         scroll += GetMouseWheelMoveV().y * 20;
         printf("Scroll: %f - GetMouseWheelMoveV().y: %f\n", scroll, GetMouseWheelMoveV().y);
