@@ -29,6 +29,8 @@ when that happens, clone this repository and run `run.bat`, and if everything is
 
 [cJSON](https://github.com/DaveGamble/cJSON) (for JSON parsing)
 
+[inih](https://github.com/benhoyt/inih) (for INI parsing)
+
 
 # In the future
 

@@ -6,10 +6,10 @@
 
 static Image img;
 
-VOID RGUIInit(){
+VOID RGUIInit(char* style){
     img = LoadImage("resources\\img\\default.png");
     RGUISetIconToDefault();
-    GuiLoadStyle("resources\\styles\\style_genesis.rgs");
+    GuiLoadStyle(style);
 }
 
 VOID RGUISetIconToDefault(){
@@ -71,6 +71,8 @@ INT Height(){
 Font RGUIGetFont(){
     return GuiGetFont();
 }
+
+
 
 VOID RGUICleanup(){
     UnloadImage(img);

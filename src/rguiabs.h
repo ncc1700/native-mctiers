@@ -10,7 +10,7 @@
 #include "extern/raylib/raygui.h"
 
 
-VOID RGUIInit();
+VOID RGUIInit(char* style);
 VOID RGUISetIconToDefault();
 VOID RGUIDrawText(const PCHAR text, INT x, INT y, FLOAT fontSize, BOOL isError);
 VOID RGUIDrawTextEx(const PCHAR text, INT x, INT y, FLOAT fontSize, int property, BOOL isError);
