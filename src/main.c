@@ -1,14 +1,9 @@
 #include "extern/naett/naett.h"
-#include "extern/raylib/raylib.h"
+#include "extern/raylib/raygui.h"
+#include "extern/raylib/raylibin.h"
 #include "extern/inih/ini.h"
 
-#include "rguiabs.h"
 
-#include "state/state.h"
-#include <stdlib.h>
-#include <minwindef.h>
-#include <winbase.h>
-#include <string.h>
 
 typedef struct _InitConfig {
     UINT targetfps;
@@ -56,23 +51,16 @@ INT main(INT argc, PCHAR argv[])
     naettInit(NULL);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetTraceLogLevel(LOG_ERROR);
-    printf("%d\n", config.targetfps);
     SetTargetFPS(config.targetfps);
-    // what I have to do for res awareness....
-    InitWindow(900, 1200, "Initial Window, if you see this please report it");
-    int x = GetMonitorWidth(GetCurrentMonitor());
-    int y = GetMonitorHeight(GetCurrentMonitor());
-    CloseWindow();
-    InitWindow(x / 3, y / 1.5, "Native Mctiers");
-    RGUIInit(config.style);
+    InitWindow(700, 700, "Native Mctiers");
+    GuiLoadStyle(config.style);
     if(config.style != NULL) free(config.style);
     while(!WindowShouldClose()){
         BeginDrawing();
-        ClearBackground(RGUIGetBackgroundColor());
-        RenderStates();
+        ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
         EndDrawing();
     }
-    RGUICleanup();
+    
     CloseWindow();
 
     return 0;
