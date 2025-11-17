@@ -66,10 +66,10 @@ VOID ResultState(){
         else pHorl = 'H';
         if(list->info.isRetired){
             sprintf_s(buffer, 255, 
-                      "%cT%d, peak: %cT%d | (retired)", horl, list->info.tier, pHorl, list->info.peakTier);
+                      "%cT%d | peak: %cT%d | (retired)", horl, list->info.tier, pHorl, list->info.peakTier);
         } else {
             sprintf_s(buffer, 255, 
-                      "%cT%d, peak: %cT%d (as of %s)", 
+                      "%cT%d | peak: %cT%d | (as of %s)", 
                       horl, list->info.tier, pHorl, list->info.peakTier, list->info.timeGotten);
         }
         DrawTextEx(RGUIGetFont(), 
