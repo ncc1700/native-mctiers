@@ -9,11 +9,14 @@
 #include <Shlwapi.h>
 #include <winuser.h>
 #include <time.h>
+#include "extern/yyjson/yyjson.h"
 static UINT8 sWhere = 0;
 static CHAR uuid[40] = {0};
 static CHAR headPath[255] = {0};
 
 #define URL_SIZE 255
+
+
 
 static inline BOOL FillUUID(PCHAR username){
     CHAR url[URL_SIZE];
@@ -29,13 +32,17 @@ static inline BOOL FillUUID(PCHAR username){
     }
     int bodyLength = 0;
     const PCHAR body = (const PCHAR)naettGetBody(res, &bodyLength);
+    if(body == NULL) return FALSE;
     printf("%s\n", body);
-
-    cJSON *json = cJSON_Parse(body);
-    cJSON *id = cJSON_GetObjectItem(json, "id");
-    if(id == NULL) return FALSE;
-    sprintf_s(uuid, 40, "%s", id->valuestring);
-    cJSON_Delete(json);
+    
+    yyjson_doc* jsonDoc = yyjson_read(body, bodyLength, 0);
+    if(jsonDoc == NULL) return FALSE;
+    yyjson_val* value = yyjson_doc_get_root(jsonDoc);
+    if(value == NULL) return FALSE;
+    yyjson_val* getUUID = yyjson_obj_get(value, "id");
+    if(getUUID == NULL) return FALSE;
+    sprintf_s(uuid, 40, "%s", yyjson_get_str(getUUID));
+    yyjson_doc_free(jsonDoc);
     free((void*)body);
     return TRUE;
 }
@@ -96,7 +103,7 @@ static DWORD WINAPI SearchThreadEntry(){
     if(FillUUID(ReturnSearchInput()) == FALSE){
         MessageBoxW(NULL, L"Invalid Name",
                     L"Native MCTiers", MB_OK | MB_ICONERROR);
-        printf("Couldn't contact mojangs server!\n");
+        printf("Couldn't get UUID!\n");
         ChangeState(SEARCH_STATE);
         return 1;
     }
