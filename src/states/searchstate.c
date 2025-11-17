@@ -25,8 +25,8 @@ VOID RenderSearchState(){
         else editMode = TRUE;
     }
     RGUIDrawText(titleText, 
-        (GetScreenWidth() - MeasureTextEx(RGUIGetFont(), titleText, 30, 1).x) / 2, 
-        GetScreenHeight() / 2 - 45, 30);
+        (GetScreenWidth() - MeasureTextEx(RGUIGetFont(), titleText, 35, 1).x) / 2, 
+        GetScreenHeight() / 2 - 45, 35);
     RGUIDrawTextBox(data, 
                     10, GetScreenHeight() / 2, 
                     GetScreenWidth() - 20, 25, 17, TRUE);
