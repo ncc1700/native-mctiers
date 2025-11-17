@@ -13,7 +13,7 @@ static PlayerInfo pInfo = {0};
 
 VOID AddTier(TierInfo info){
     TierInfoList* newList = calloc(1, sizeof(TierInfoList));
-    // did the OS run out of memory, will probably never be seen
+    // the OS ran out of memory, will probably never be seen
     // unless for some reason the OS turns off paging/swap or
     // we run in a less capable system/OS
     if(newList == NULL){
@@ -45,33 +45,7 @@ VOID SetupPlayerInfo(PlayerInfo info){
              sizeof(PlayerInfo));
 }
 
-static inline VOID CalculateMCTiersPlayerPoints(){
-    TierInfoList* tList = initial;
-    while(tList != NULL){
-        switch(tList->info.peakTier){
-            case 1:
-                pInfo.pointsReserved += tList->info.peakHorL ? 45 : 60;
-                break;
-            case 2:
-                pInfo.pointsReserved += tList->info.peakHorL ? 20 : 30;
-                break;
-            case 3:
-                pInfo.pointsReserved += tList->info.peakHorL ? 6 : 10;
-                break;
-            case 4:
-                pInfo.pointsReserved += tList->info.peakHorL ? 3 : 4;
-                break;
-            case 5:
-                pInfo.pointsReserved += tList->info.peakHorL ? 1 : 2;
-                break;
-            default:
-                break;
-        }
-        tList = tList->next;
-    }
-}
-
-static inline VOID CalculateSubTiersPlayerPoints(){
+static inline VOID CalculateMCTiersandSubtiersPlayerPoints(){
     TierInfoList* tList = initial;
     while(tList != NULL){
         switch(tList->info.peakTier){
@@ -105,10 +79,8 @@ static inline VOID CalculatePVPTiersPlayerPoints(){
 VOID CalculatePlayerPoints(int tierSystem){
     switch(tierSystem){
         case 0:
-            CalculateMCTiersPlayerPoints();
-            return;
         case 1:
-            CalculateSubTiersPlayerPoints();
+            CalculateMCTiersandSubtiersPlayerPoints();
             return;
         case 2:
             CalculatePVPTiersPlayerPoints();

@@ -34,8 +34,8 @@ static inline VOID RenderPlayerInfo(PlayerInfo pInfo, Texture2D texture){
     
     // so we don't see the overflowing text
     DrawRectangle(0, 0, GetScreenWidth(), 200, RGUIGetBackgroundColor());
-    RGUIDrawText(pInfo.name, 10, 10, 30);
-    RGUIDrawText(pBuffer, 10, 60, 24);
+    RGUIDrawText(pInfo.name, 10, 10, 35);
+    RGUIDrawText(pBuffer, 10, 60, 29);
     DrawTexture(texture, GetScreenWidth() - 200, 10, WHITE);
 
 
