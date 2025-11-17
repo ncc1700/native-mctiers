@@ -1,6 +1,5 @@
 #include "search.h"
 #include "extern/naett/naett.h"
-#include "extern/cjson/cJSON.h"
 #include "result.h"
 #include "state.h"
 #include "states/searchstate.h"
