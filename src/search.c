@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Shlwapi.h>
-
+#include <winuser.h>
+#include <time.h>
 static UINT8 sWhere = 0;
 static CHAR uuid[40] = {0};
 static CHAR headPath[255] = {0};
@@ -20,7 +21,8 @@ static inline BOOL FillUUID(PCHAR username){
     naettReq* req = naettRequestWithOptions(url, 0, NULL);
     naettRes* res = naettMake(req);
     while(!naettComplete(res)){
-        Sleep(1);
+        printf("waiting on mojang...\n");
+        Sleep(500);
     }
     if(naettGetStatus(res) < 0){
         return FALSE;
@@ -28,6 +30,7 @@ static inline BOOL FillUUID(PCHAR username){
     int bodyLength = 0;
     const PCHAR body = (const PCHAR)naettGetBody(res, &bodyLength);
     printf("%s\n", body);
+
     cJSON *json = cJSON_Parse(body);
     cJSON *id = cJSON_GetObjectItem(json, "id");
     if(id == NULL) return FALSE;
@@ -41,10 +44,13 @@ static inline BOOL FillUUID(PCHAR username){
 static inline BOOL GetPlayerHead(PCHAR username){
     CHAR url[URL_SIZE];
     sprintf_s(url, URL_SIZE, "https://www.mc-heads.net/head/%s", username);
+
+
     naettReq* req = naettRequestWithOptions(url, 0, NULL);
     naettRes* res = naettMake(req);
     while(!naettComplete(res)){
-        Sleep(1);
+        printf("waiting on mc-heads...\n");
+        Sleep(500);
     }
     if(naettGetStatus(res) < 0){
         return FALSE;
@@ -53,17 +59,22 @@ static inline BOOL GetPlayerHead(PCHAR username){
     void* body = (void*)naettGetBody(res, &bodyLength);
     printf("head image size is %d\n", bodyLength);
 
+
     CHAR temppath[100];
-    // TODO: in like 10 years use GetTempPath2W when everyone is on 11 or up
+    // TODO: in like 10 years use GetTempPath2A when everyone is on 11 or up
     GetTempPathA(100, temppath);
-    CHAR path[255];
-    sprintf_s(path, 255, "%s\\mctiers", temppath);
     CHAR headpath[255];
     sprintf_s(headpath, 255, "%s\\mctiers\\head.png", temppath);
-    wprintf(L"\nHead is going to be stored at %s\n", headpath);
+    printf("\nHead is going to be stored at %s\n", headpath);
+
+    // we use this to check if the path even exists, if not we create it
+    // yes ik useless and for one case but idrc
+    CHAR path[255];
+    sprintf_s(path, 255, "%s\\mctiers", temppath);
     if(!PathFileExistsA(path)){
         CreateDirectoryA(path, NULL);
     }
+
     // yes i ran out of names
     strcpy_s(headPath, 255, headpath);
     HANDLE hFile = CreateFileA(headpath, GENERIC_READ | GENERIC_WRITE, 0, NULL,
@@ -83,11 +94,17 @@ static inline BOOL GetPlayerHead(PCHAR username){
 
 static DWORD WINAPI SearchThreadEntry(){
     if(FillUUID(ReturnSearchInput()) == FALSE){
+        MessageBoxW(NULL, L"Invalid Name",
+                    L"Native MCTiers", MB_OK | MB_ICONERROR);
         printf("Couldn't contact mojangs server!\n");
+        ChangeState(SEARCH_STATE);
         return 1;
     }
     if(GetPlayerHead(ReturnSearchInput()) == FALSE){
+        MessageBoxW(NULL, L"Error: Couldn't obtain player head",
+                    L"Native MCTiers", MB_OK | MB_ICONERROR);
         printf("Couldn't Obtain player head\n");
+        ChangeState(SEARCH_STATE);
         return 1;
     }
 
@@ -112,7 +129,8 @@ static DWORD WINAPI SearchThreadEntry(){
     naettReq* req = naettRequestWithOptions(url, 0, NULL);
     naettRes* res = naettMake(req);
     while(naettComplete(res) == FALSE){
-        Sleep(1);
+        printf("waiting on tierlist site...\n");
+        Sleep(500);
     }
     int bodyLength;
     PCHAR body = (PCHAR)naettGetBody(res, &bodyLength);
@@ -127,6 +145,23 @@ static DWORD WINAPI SearchThreadEntry(){
         cJSON* peak_tier = cJSON_GetObjectItem(specific, "peak_tier");
         cJSON* peakhorl = cJSON_GetObjectItem(specific, "peak_pos");
         cJSON* isRetired = cJSON_GetObjectItem(specific, "retired");
+        cJSON* attained = cJSON_GetObjectItem(specific, "attained");
+
+        // before we do anything fun and easy, lets get the time out of our way
+        struct tm lt;
+        time_t timet = (time_t)attained->valueint;
+        errno_t errres = localtime_s(&lt, &timet);
+        if(errres != EINVAL){
+            size_t result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
+            if(result == 0){
+                printf("ERROR, COULDN'T GET TIME!\n");
+                sprintf_s(tInfo.timeGotten, 32, "UNKNOWN");
+            }
+        } else {
+            printf("ERROR, COULDN'T GET LOCALTIME!\n");
+            sprintf_s(tInfo.timeGotten, 32, "UNKNOWN");
+        }
+
         printf("%s\n", specific->string);
         strcpy_s(tInfo.tierName, 90, specific->string);
         tInfo.tier = curtier->valueint;
@@ -136,7 +171,10 @@ static DWORD WINAPI SearchThreadEntry(){
         tInfo.isRetired = isRetired->valueint;
         AddTier(tInfo);
     }
-    CalculatePlayerPoints();
+
+    CalculatePlayerPoints(sWhere);
+    cJSON_Delete(json);
+    free((void*)body);
     ChangeState(RESULT_STATE);
     return 0;
 }

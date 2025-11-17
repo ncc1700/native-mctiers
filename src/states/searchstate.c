@@ -15,7 +15,6 @@ VOID RenderSearchState(){
     CHAR titleText[] = "Search for a player";
     static INT active = 0;
     static BOOL editMode = FALSE;
-    printf("%d\n", active);
     INT state = RGUIDropDownBox("MCTiers;SubTiers;PVPTiers", 10, 10, 100, 20, &active, editMode);
     if(state == 1){
         if(editMode == TRUE) editMode = FALSE;
@@ -31,6 +30,4 @@ VOID RenderSearchState(){
     if(resButton == 1){
         BeginSearch(active);
     }
-   
-    
 }

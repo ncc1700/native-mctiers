@@ -23,13 +23,13 @@ typedef struct _TierInfo {
     UINT8 peakHorL;
     UINT8 peakTier;
     BOOL isRetired;
-    CHAR timeGotten[10];
+    CHAR timeGotten[32];
 } TierInfo;
 
 typedef struct _PlayerInfo {
     CHAR name[MAX_NAME_LENGTH];
     CHAR playerHeadPath[256];
-    UINT8 pointsReserved;
+    UINT32 pointsReserved;
 } PlayerInfo;
 
 
@@ -44,7 +44,7 @@ typedef struct _TierInfoList {
 
 VOID AddTier(TierInfo info);
 VOID SetupPlayerInfo(PlayerInfo info);
-VOID CalculatePlayerPoints();
+VOID CalculatePlayerPoints(int tierSystem);
 PlayerInfo ReturnPlayerInfo();
 TierInfoList* ReturnTierInfoList();
 VOID ResetEverything();
