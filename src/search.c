@@ -103,14 +103,12 @@ static DWORD WINAPI SearchThreadEntry(){
     if(FillUUID(ReturnSearchInput()) == FALSE){
         MessageBoxW(NULL, L"Invalid Name",
                     L"Native MCTiers", MB_OK | MB_ICONERROR);
-        printf("Couldn't get UUID!\n");
         ChangeState(SEARCH_STATE);
         return 1;
     }
     if(GetPlayerHead(ReturnSearchInput()) == FALSE){
         MessageBoxW(NULL, L"Error: Couldn't obtain player head",
                     L"Native MCTiers", MB_OK | MB_ICONERROR);
-        printf("Couldn't Obtain player head\n");
         ChangeState(SEARCH_STATE);
         return 1;
     }
@@ -142,21 +140,48 @@ static DWORD WINAPI SearchThreadEntry(){
     int bodyLength;
     PCHAR body = (PCHAR)naettGetBody(res, &bodyLength);
 
-    cJSON* json = cJSON_Parse(body);
-    cJSON* specific = NULL;
-
-    cJSON_ArrayForEach(specific, json){
+    yyjson_doc* jsonDoc = yyjson_read(body, bodyLength, 0);
+    if(jsonDoc == NULL){
+        MessageBoxW(NULL, L"Couldn't parse body",
+                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ChangeState(SEARCH_STATE);
+        return 1;
+    }
+    yyjson_val* root = yyjson_doc_get_root(jsonDoc);
+    
+    if(root == NULL){
+        MessageBoxW(NULL, L"Couldn't find root",
+                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ChangeState(SEARCH_STATE);
+        return 1;
+    }
+    size_t idx, max;
+    yyjson_val *main, *tier;
+    yyjson_obj_foreach(root, idx, max, main, tier) {
         TierInfo tInfo = {0};
-        cJSON* curtier = cJSON_GetObjectItem(specific, "tier");
-        cJSON* horl = cJSON_GetObjectItem(specific, "pos");
-        cJSON* peak_tier = cJSON_GetObjectItem(specific, "peak_tier");
-        cJSON* peakhorl = cJSON_GetObjectItem(specific, "peak_pos");
-        cJSON* isRetired = cJSON_GetObjectItem(specific, "retired");
-        cJSON* attained = cJSON_GetObjectItem(specific, "attained");
-
+        if(main == NULL || tier == NULL){
+            MessageBoxW(NULL, L"main or tier is null",
+                        L"Native MCTiers", MB_OK | MB_ICONERROR);
+            ChangeState(SEARCH_STATE);
+            return 1;
+        }
+        yyjson_val* curTier = yyjson_obj_get(tier, "tier");
+        yyjson_val* horl = yyjson_obj_get(tier, "pos");
+        yyjson_val* peak_tier = yyjson_obj_get(tier, "peak_tier");
+        yyjson_val* peakhorl = yyjson_obj_get(tier, "peak_pos");
+        yyjson_val* isRetired = yyjson_obj_get(tier, "retired");
+        yyjson_val* attained = yyjson_obj_get(tier, "attained");
+        if(curTier == NULL || horl == NULL || peak_tier == NULL 
+                || peakhorl == NULL || isRetired == NULL || attained == NULL)
+        {
+            MessageBoxW(NULL, L"Error parsing json",
+                        L"Native MCTiers", MB_OK | MB_ICONERROR);
+            ChangeState(SEARCH_STATE);
+            return 1;
+        }
         // before we do anything fun and easy, lets get the time out of our way
         struct tm lt;
-        time_t timet = (time_t)attained->valueint;
+        time_t timet = (time_t)yyjson_get_sint(attained);
         errno_t errres = localtime_s(&lt, &timet);
         if(errres != EINVAL){
             size_t result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
@@ -168,19 +193,17 @@ static DWORD WINAPI SearchThreadEntry(){
             printf("ERROR, COULDN'T GET LOCALTIME!\n");
             sprintf_s(tInfo.timeGotten, 32, "UNKNOWN");
         }
-
-        printf("%s\n", specific->string);
-        strcpy_s(tInfo.tierName, 90, specific->string);
-        tInfo.tier = curtier->valueint;
-        tInfo.HorL = horl->valueint;
-        tInfo.peakTier = peak_tier->valueint;
-        tInfo.peakHorL = peakhorl->valueint;
-        tInfo.isRetired = isRetired->valueint;
+        printf("%s\n", yyjson_get_str(main));
+        strcpy_s(tInfo.tierName, 90, yyjson_get_str(main));
+        tInfo.tier = yyjson_get_int(curTier);
+        tInfo.HorL = yyjson_get_int(horl);
+        tInfo.peakTier = yyjson_get_int(peak_tier);
+        tInfo.peakHorL = yyjson_get_int(peakhorl);
+        tInfo.isRetired = yyjson_get_int(isRetired);
         AddTier(tInfo);
     }
-
     CalculatePlayerPoints(sWhere);
-    cJSON_Delete(json);
+    yyjson_doc_free(jsonDoc);
     free((void*)body);
     ChangeState(RESULT_STATE);
     return 0;
