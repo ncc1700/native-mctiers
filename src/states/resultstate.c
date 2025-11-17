@@ -74,12 +74,12 @@ VOID ResultState(){
         }
         DrawTextEx(RGUIGetFont(), 
                    list->info.tierName, (Vector2){10, i + offset}, 
-                   22, 1, (Color){255, i - 100, 255, 255});
+                   30, 1, (Color){255, i - 100, 255, 255});
         DrawTextEx(RGUIGetFont(), 
                    buffer, 
                    (Vector2)
-                   {MeasureTextEx(RGUIGetFont(), list->info.tierName, 22, 1).x + 24, i + offset}, 
-                   22, 1, WHITE);
+                   {MeasureTextEx(RGUIGetFont(), list->info.tierName, 30, 1).x + 24, i + offset}, 
+                   30, 1, WHITE);
         
         DrawLine(0, (i + offset) + 40,
                  GetScreenWidth() - 20, (i + offset) + 40, WHITE);
