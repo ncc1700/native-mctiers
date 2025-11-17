@@ -27,7 +27,7 @@ when that happens, clone this repository and run `run.bat`, and if everything is
 
 [RayGUI](https://github.com/raysan5/raygui) (for making a decent GUI in Raylib)
 
-[cJSON](https://github.com/DaveGamble/cJSON) (for JSON parsing)
+[yyjson](https://github.com/ibireme/yyjson) (for JSON parsing)
 
 [inih](https://github.com/benhoyt/inih) (for INI parsing)
 

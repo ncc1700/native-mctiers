@@ -16,11 +16,9 @@ VOID RGUISetIconToDefault(){
     SetWindowIcon(img);
 }
 
-VOID RGUIDrawText(const PCHAR text, INT x, INT y, FLOAT fontSize, BOOL isError){
+VOID RGUIDrawText(const PCHAR text, INT x, INT y, FLOAT fontSize){
     Vector2 pos = {x, y};
-    Color color;
-    if(isError) color = RED;
-    else color = GetColor(GuiGetStyle(TEXT, TEXT_COLOR_NORMAL));
+    Color color = GetColor(GuiGetStyle(TEXT, TEXT_COLOR_NORMAL));
     DrawTextEx(GuiGetFont(), text, pos, fontSize, 1, color);
 }
 
@@ -50,9 +48,9 @@ INT RGUIDrawButton(const PCHAR text, INT x, INT y, INT width, INT height){
     return GuiButton(pos, text);
 }
 
-INT RGUIDrawTextBox(const PCHAR text, INT x, INT y, INT width, INT height, FLOAT fontSize, BOOL editMode){
+INT RGUIDrawTextBox(const PCHAR text, INT x, INT y, INT width, INT height, FLOAT textAmount, BOOL editMode){
     Rectangle pos = {x, y, width, height};
-    return GuiTextBox(pos, text, fontSize, editMode);
+    return GuiTextBox(pos, text, textAmount, editMode);
 }
 
 INT RGUIDrawWindow(const PCHAR text, INT x, INT y, INT width, INT height){
@@ -71,7 +69,6 @@ INT Height(){
 Font RGUIGetFont(){
     return GuiGetFont();
 }
-
 
 
 VOID RGUICleanup(){

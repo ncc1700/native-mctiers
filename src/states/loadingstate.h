@@ -8,14 +8,17 @@
 
 
 
+#include "../extern/raylib/raylibin.h"
 
-
-#include "../typedef.h"
 
 
 
 
 VOID LoadingState();
+
+
+
+
 
 
 
