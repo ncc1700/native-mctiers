@@ -72,8 +72,29 @@ static inline VOID CalculateMCTiersPlayerPoints(){
 }
 
 static inline VOID CalculateSubTiersPlayerPoints(){
-    // stub
-    pInfo.pointsReserved = 0;
+    TierInfoList* tList = initial;
+    while(tList != NULL){
+        switch(tList->info.peakTier){
+            case 1:
+                pInfo.pointsReserved += tList->info.peakHorL ? 45 : 60;
+                break;
+            case 2:
+                pInfo.pointsReserved += tList->info.peakHorL ? 20 : 30;
+                break;
+            case 3:
+                pInfo.pointsReserved += tList->info.peakHorL ? 6 : 10;
+                break;
+            case 4:
+                pInfo.pointsReserved += tList->info.peakHorL ? 3 : 4;
+                break;
+            case 5:
+                pInfo.pointsReserved += tList->info.peakHorL ? 1 : 2;
+                break;
+            default:
+                break;
+        }
+        tList = tList->next;
+    }
 }
 
 static inline VOID CalculatePVPTiersPlayerPoints(){

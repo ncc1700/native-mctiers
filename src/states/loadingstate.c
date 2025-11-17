@@ -25,11 +25,11 @@ VOID LoadingState(){
     }
     CHAR text[] = "Getting Player Info";
     RGUIDrawText(text, 
-        (GetScreenWidth() - MeasureTextEx(RGUIGetFont(), text, 30, 1).x) / 2, 
-        GetScreenHeight() / 2 - 45, 30);
+        (GetScreenWidth() - MeasureTextEx(RGUIGetFont(), text, 20, 1).x) / 2, 
+        GetScreenHeight() / 2 - 45, 20);
     RGUIDrawText(animation[curAnim], 
-                    ((float)Width() / 2) - (MeasureTextEx(RGUIGetFont(), animation[curAnim], 40, 1).x) / 2, 
-                    (Height() / 2), 40);
+                    ((float)Width() / 2) - (MeasureTextEx(RGUIGetFont(), animation[curAnim], 30, 1).x) / 2, 
+                    (Height() / 2), 30);
     if((GetTime() - curTime) >= 0.3){
         if(curAnim >= 2){
             curAnim = 0;

@@ -1,7 +1,6 @@
+#include "config.h"
 #include "extern/naett/naett.h"
 #include "extern/raylib/raygui.h"
-#include "initialconfig.h"
-#include <stdlib.h>
 #include "rguiabs.h"
 #include "state.h"
 #define DEBUG
@@ -12,8 +11,9 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 INT main(INT argc, PCHAR argv[])
 #endif
 {
-    // we parse the init.ini config file
-    InitConfig config = HandleConfiguration();
+    // we parse the config.json config file, if fails itll kill the process itself
+    Config config = HandleConfig();
+
     // we set up networking
     naettInit(NULL);
 
@@ -23,7 +23,6 @@ INT main(INT argc, PCHAR argv[])
     SetTargetFPS(config.targetfps);
     InitWindow(700, 700, "Native Mctiers");
     RGUIInit(config.style);
-    if(config.style != NULL) free(config.style);
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(RGUIGetBackgroundColor());

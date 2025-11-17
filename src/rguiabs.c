@@ -71,8 +71,6 @@ Font RGUIGetFont(){
 }
 
 
-
-
 VOID RGUICleanup(){
     UnloadImage(img);
 }

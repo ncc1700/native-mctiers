@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <winnt.h>
 #include "../rguiabs.h"
+#include "searchstate.h"
 
 
 static inline VOID HandleScrollBar(int* offset){
@@ -33,8 +34,8 @@ static inline VOID RenderPlayerInfo(PlayerInfo pInfo, Texture2D texture){
     
     // so we don't see the overflowing text
     DrawRectangle(0, 0, GetScreenWidth(), 200, RGUIGetBackgroundColor());
-    RGUIDrawText(pInfo.name, 10, 10, 40);
-    RGUIDrawText(pBuffer, 10, 60, 26);
+    RGUIDrawText(pInfo.name, 10, 10, 30);
+    RGUIDrawText(pBuffer, 10, 60, 24);
     DrawTexture(texture, GetScreenWidth() - 200, 10, WHITE);
 
 
@@ -73,12 +74,12 @@ VOID ResultState(){
         }
         DrawTextEx(RGUIGetFont(), 
                    list->info.tierName, (Vector2){10, i + offset}, 
-                   26, 1, (Color){255, i - 100, 255, 255});
+                   22, 1, (Color){255, i - 100, 255, 255});
         DrawTextEx(RGUIGetFont(), 
                    buffer, 
                    (Vector2)
-                   {MeasureTextEx(RGUIGetFont(), list->info.tierName, 26, 1).x + 20, i + offset}, 
-                   26, 1, WHITE);
+                   {MeasureTextEx(RGUIGetFont(), list->info.tierName, 22, 1).x + 24, i + offset}, 
+                   22, 1, WHITE);
         
         DrawLine(0, (i + offset) + 40,
                  GetScreenWidth() - 20, (i + offset) + 40, WHITE);
@@ -95,17 +96,17 @@ VOID ResultState(){
     RenderPlayerInfo(pInfo, texture);
     int retButton = RGUIDrawButton("Go Back", 10, 100, 70, 30);
 
-    // scroll bar
+    // scrolling
     if(i > GetScreenHeight() || offset != 0){
         HandleScrollBar(&offset);
     }
     
-
     if(IsKeyPressed(KEY_P) || retButton == 1){
         RGUISetIconToDefault();
         UnloadImage(image);
         UnloadTexture(texture);
         ResetEverything();
+        ClearSearchData();
         ChangeState(SEARCH_STATE);
         offset = 0;
         init = FALSE;

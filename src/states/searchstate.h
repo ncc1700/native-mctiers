@@ -14,7 +14,7 @@
 
 PCHAR ReturnSearchInput();
 VOID RenderSearchState();
-
+VOID ClearSearchData();
 
 
 

@@ -141,8 +141,9 @@ static DWORD WINAPI SearchThreadEntry(){
 
     yyjson_doc* jsonDoc = yyjson_read(body, bodyLength, 0);
     if(jsonDoc == NULL){
-        MessageBoxW(NULL, L"Couldn't parse body",
+        MessageBoxW(NULL, L"Couldn't parse body, does the player exist in this tierlist?",
                     L"Native MCTiers", MB_OK | MB_ICONERROR);
+        free((void*)body);
         ChangeState(SEARCH_STATE);
         return 1;
     }
@@ -151,6 +152,8 @@ static DWORD WINAPI SearchThreadEntry(){
     if(root == NULL){
         MessageBoxW(NULL, L"Couldn't find root",
                     L"Native MCTiers", MB_OK | MB_ICONERROR);
+        yyjson_doc_free(jsonDoc);
+        free((void*)body);
         ChangeState(SEARCH_STATE);
         return 1;
     }
@@ -161,6 +164,8 @@ static DWORD WINAPI SearchThreadEntry(){
         if(main == NULL || tier == NULL){
             MessageBoxW(NULL, L"main or tier is null",
                         L"Native MCTiers", MB_OK | MB_ICONERROR);
+            yyjson_doc_free(jsonDoc);
+            free((void*)body);
             ChangeState(SEARCH_STATE);
             return 1;
         }
@@ -175,6 +180,8 @@ static DWORD WINAPI SearchThreadEntry(){
         {
             MessageBoxW(NULL, L"Error parsing json",
                         L"Native MCTiers", MB_OK | MB_ICONERROR);
+            yyjson_doc_free(jsonDoc);
+            free((void*)body);
             ChangeState(SEARCH_STATE);
             return 1;
         }
@@ -198,7 +205,7 @@ static DWORD WINAPI SearchThreadEntry(){
         tInfo.HorL = yyjson_get_int(horl);
         tInfo.peakTier = yyjson_get_int(peak_tier);
         tInfo.peakHorL = yyjson_get_int(peakhorl);
-        tInfo.isRetired = yyjson_get_int(isRetired);
+        tInfo.isRetired = yyjson_get_bool(isRetired);
         AddTier(tInfo);
     }
     CalculatePlayerPoints(sWhere);
