@@ -5,7 +5,7 @@
 #include "lists/tierlists.h"
 #include "rguiabs.h"
 #include "state.h"
-
+#include <stddef.h>
 #define DEBUG
 
 #ifndef DEBUG
