@@ -12,12 +12,24 @@
 #include "extern/yyjson/yyjson.h"
 #include "lists/tierlists.h"
 
+#ifdef _WIN32
+#include <Windows.h>
+#elif __linux__
+#include <unistd.h>
+#endif
 static UINT8 sWhere = 0;
 static CHAR uuid[40] = {0};
 static CHAR headPath[255] = {0};
 
 #define URL_SIZE 255
 
+static inline void os_sleep(int seconds){
+    #ifdef _WIN32
+    Sleep(seconds * 1000);
+    #elif __linux__
+    sleep(seconds)
+    #endif
+}
 
 
 static inline BOOL FillUUID(PCHAR username){
@@ -27,7 +39,7 @@ static inline BOOL FillUUID(PCHAR username){
     naettRes* res = naettMake(req);
     while(!naettComplete(res)){
         printf("waiting on mojang...\n");
-        Sleep(500);
+        os_sleep(1);
     }
     if(naettGetStatus(res) < 0){
         return FALSE;
@@ -59,7 +71,7 @@ static inline BOOL GetPlayerHead(PCHAR username){
     naettRes* res = naettMake(req);
     while(!naettComplete(res)){
         printf("waiting on mc-heads...\n");
-        Sleep(500);
+        os_sleep(1);
     }
     if(naettGetStatus(res) < 0){
         return FALSE;
@@ -120,7 +132,7 @@ static INT SearchThreadEntry(){
     naettRes* res = naettMake(req);
     while(naettComplete(res) == FALSE){
         printf("waiting on tierlist site...\n");
-        Sleep(500);
+        os_sleep(1);
     }
     int bodyLength;
     PCHAR body = (PCHAR)naettGetBody(res, &bodyLength);
@@ -168,10 +180,10 @@ static INT SearchThreadEntry(){
             return 1;
         }
         // before we do anything fun and easy, lets get the time out of our way
-        struct tm lt;
+        struct tm *lt;
         time_t timet = (time_t)yyjson_get_sint(attained);
-        errno_t errres = localtime_s(&lt, &timet);
-        if(errres != EINVAL){
+        lt = localtime(&timet);
+        if(lt != NULL){
             size_t result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
             if(result == 0){
                 printf("ERROR, COULDN'T GET TIME!\n");
