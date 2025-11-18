@@ -186,9 +186,9 @@ static INT SearchThreadEntry(){
         if(lt != NULL){
             size_t result = 0;
             #ifdef _WIN32
-            result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
+            result = strftime(tInfo.timeGotten, 32, "%D", lt);
             #elif __linux__
-            result = strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
+            result = strftime(tInfo.timeGotten, 32, "%D", lt, NULL);
             #endif
             if(result == 0){
                 printf("ERROR, COULDN'T GET TIME!\n");
