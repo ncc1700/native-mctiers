@@ -7,7 +7,7 @@
 
 
 #include "../types.h"
-
+#include <stddef.h>
 typedef VOID (*CalculatePlayerPointsFn)(void);
 typedef PCHAR (*UrlBeginningFn)(void);
 typedef PCHAR (*ReturnNameFn)(void);
