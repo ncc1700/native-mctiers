@@ -45,7 +45,7 @@
 #include <strings.h>
 #include <assert.h>
 #include <stdlib.h>
- 
+#include <unistd.h>
 
 char* strdup(const char* string) {
     size_t size = strlen(string) + 1;
@@ -66,6 +66,9 @@ char* strndup(const char* string, unsigned long size) {
     return copy;
 }
 
+VOID usleep(unsigned long amount){
+
+}
 
 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
