@@ -184,7 +184,12 @@ static INT SearchThreadEntry(){
         time_t timet = (time_t)yyjson_get_sint(attained);
         lt = localtime(&timet);
         if(lt != NULL){
-            size_t result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
+            size_t result = 0;
+            #ifdef _WIN32
+            result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
+            #elif __linux__
+            result = strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
+            #endif
             if(result == 0){
                 printf("ERROR, COULDN'T GET TIME!\n");
                 safe_sprintf(tInfo.timeGotten, 32, "UNKNOWN");
