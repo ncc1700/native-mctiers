@@ -11,7 +11,10 @@ typedef JavaVM* naettInitData;
 #else
 typedef void* naettInitData;
 #endif
-
+#include <string.h>
+#include <assert.h>
+#include <stdlib.h>
+ 
 #define NAETT_UA "Naett/1.0"
 
 /**
