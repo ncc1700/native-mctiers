@@ -46,7 +46,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <time.h>
 char* strdup(const char* string) {
     size_t size = strlen(string) + 1;
     char* copy = NULL;
@@ -66,7 +66,12 @@ char* strndup(const char* string, unsigned long size) {
     return copy;
 }
 
-
+void usleep(long microseconds) {
+    struct timespec ts;
+    ts.tv_sec  = microseconds / 1000000;
+    ts.tv_nsec = (microseconds % 1000000) * 1000;
+    nanosleep(&ts, NULL);
+}
 
 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
