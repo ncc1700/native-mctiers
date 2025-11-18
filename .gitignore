@@ -5,3 +5,4 @@ nativemctiers.lib
 *.exp
 temp/
 *.res
+*.png

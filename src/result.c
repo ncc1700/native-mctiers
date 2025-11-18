@@ -1,7 +1,9 @@
 #include "result.h"
+#include "error.h"
+#include "osabs/osabs.h"
 #include <stdlib.h>
 #include <string.h>
-#include <winuser.h>
+#include <windows.h>
 
 
 
@@ -17,12 +19,11 @@ VOID AddTier(TierInfo info){
     // unless for some reason the OS turns off paging/swap or
     // we run in a less capable system/OS
     if(newList == NULL){
-        MessageBoxW(NULL, L"Ran out of memory, result might not be accurate",
-                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ErrCreateErrorWindow("Ran out of memory, result might not be accurate");
         return;
     }
-    strcpy_s(newList->info.tierName, 90, info.tierName);
-    strcpy_s(newList->info.timeGotten, 10, info.timeGotten);
+    safe_strcpy(newList->info.tierName, 90, info.tierName);
+    safe_strcpy(newList->info.timeGotten, 10, info.timeGotten);
     newList->info.tier = info.tier;
     newList->info.HorL = info.HorL;
     newList->info.isRetired = info.isRetired;
@@ -45,72 +46,12 @@ VOID SetupPlayerInfo(PlayerInfo info){
              sizeof(PlayerInfo));
 }
 
-static inline VOID CalculateMCTiersandSubtiersPlayerPoints(){
-    TierInfoList* tList = initial;
-    while(tList != NULL){
-        switch(tList->info.peakTier){
-            case 1:
-                pInfo.pointsReserved += tList->info.peakHorL ? 45 : 60;
-                break;
-            case 2:
-                pInfo.pointsReserved += tList->info.peakHorL ? 20 : 30;
-                break;
-            case 3:
-                pInfo.pointsReserved += tList->info.peakHorL ? 6 : 10;
-                break;
-            case 4:
-                pInfo.pointsReserved += tList->info.peakHorL ? 3 : 4;
-                break;
-            case 5:
-                pInfo.pointsReserved += tList->info.peakHorL ? 1 : 2;
-                break;
-            default:
-                break;
-        }
-        tList = tList->next;
-    }
-}
-
-static inline VOID CalculatePVPTiersPlayerPoints(){
-    TierInfoList* tList = initial;
-    while(tList != NULL){
-        switch(tList->info.peakTier){
-            case 1:
-                pInfo.pointsReserved += tList->info.peakHorL ? 44 : 60;
-                break;
-            case 2:
-                pInfo.pointsReserved += tList->info.peakHorL ? 16 : 28;
-                break;
-            case 3:
-                pInfo.pointsReserved += tList->info.peakHorL ? 6 : 10;
-                break;
-            case 4:
-                pInfo.pointsReserved += tList->info.peakHorL ? 3 : 4;
-                break;
-            case 5:
-                pInfo.pointsReserved += tList->info.peakHorL ? 1 : 2;
-                break;
-            default:
-                break;
-        }
-        tList = tList->next;
-    }
-}
-
-VOID CalculatePlayerPoints(int tierSystem){
-    switch(tierSystem){
-        case 0:
-        case 1:
-            CalculateMCTiersandSubtiersPlayerPoints();
-            return;
-        case 2:
-            CalculatePVPTiersPlayerPoints();
-            return;
-    }
-}
-
 PlayerInfo ReturnPlayerInfo(){
     return pInfo;
+}
+
+VOID SetPlayerPoints(INT points){
+    pInfo.pointsReserved = points;
 }
 
 TierInfoList* ReturnTierInfoList(){

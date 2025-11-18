@@ -19,6 +19,7 @@ VOID RenderSearchState(){
     CHAR titleText[] = "Search for a player";
     static INT active = 0;
     static BOOL editMode = FALSE;
+    // make sure to add it in the same order as the TierLists enum
     INT state = RGUIDropDownBox("MCTiers;SubTiers;PVPTiers", 10, 10, 100, 20, &active, editMode);
     if(state == 1){
         if(editMode == TRUE) editMode = FALSE;

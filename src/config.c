@@ -1,14 +1,22 @@
 #include "config.h"
+#include "extern/raylib/raylibin.h"
 #include "extern/yyjson/yyjson.h"
-#include <corecrt_search.h>
-#include <processthreadsapi.h>
-#include <Windows.h>
+#include "osabs/osabs.h"
 
 
 
 static inline VOID Error(const char* string){
-    MessageBoxA(NULL, string, "Native-MCTiers", MB_OK | MB_ICONERROR);
-    ExitProcess(1);
+    SetTraceLogLevel(LOG_ERROR);
+    SetTargetFPS(30);
+    InitWindow(400, 100, "CONFIG ERROR");
+    printf("Can't load init.ini\n");
+    while(!WindowShouldClose()){
+        BeginDrawing();
+        DrawText(string, 10, 10, 20, RED);
+        ClearBackground(BLACK);
+        EndDrawing();
+    }
+    exit(1);
 }
 
 
@@ -29,7 +37,7 @@ Config HandleConfig(){
     if(style == NULL) Error("Couldn't get Style");
     con.targetfps = yyjson_get_uint(targetfps);
     printf("%llu - %s\n", yyjson_get_uint(targetfps), yyjson_get_str(style));
-    sprintf_s(con.style, 255, "resources/styles/%s.rgs", yyjson_get_str(style));
+    safe_sprintf(con.style, 255, "resources/styles/%s.rgs", yyjson_get_str(style));
     yyjson_doc_free(doc);
     return con;
 }

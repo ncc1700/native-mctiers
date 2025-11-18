@@ -7,7 +7,7 @@
 
 
 
-#include "../extern/raylib/raylibin.h"
+#include "../types.h"
 
 #define MAX_NAME_LENGTH 17
 

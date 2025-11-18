@@ -10,7 +10,7 @@
 
 
 
-#include "extern/raylib/raylibin.h"
+#include "types.h"
 #include "states/searchstate.h"
 
 
@@ -44,8 +44,8 @@ typedef struct _TierInfoList {
 
 VOID AddTier(TierInfo info);
 VOID SetupPlayerInfo(PlayerInfo info);
-VOID CalculatePlayerPoints(int tierSystem);
 PlayerInfo ReturnPlayerInfo();
+VOID SetPlayerPoints(INT points);
 TierInfoList* ReturnTierInfoList();
 VOID ResetEverything();
 

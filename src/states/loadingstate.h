@@ -8,8 +8,7 @@
 
 
 
-#include "../extern/raylib/raylibin.h"
-
+#include "../types.h"
 
 
 

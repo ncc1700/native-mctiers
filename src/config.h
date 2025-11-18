@@ -8,10 +8,7 @@
 
 
 
-#define _AMD64_
-#include <minwindef.h>
-
-
+#include "types.h"
 
 
 

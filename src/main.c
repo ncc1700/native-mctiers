@@ -1,8 +1,11 @@
 #include "config.h"
+#include "error.h"
 #include "extern/naett/naett.h"
 #include "extern/raylib/raygui.h"
+#include "lists/tierlists.h"
 #include "rguiabs.h"
 #include "state.h"
+
 #define DEBUG
 
 #ifndef DEBUG
@@ -17,6 +20,8 @@ INT main(INT argc, PCHAR argv[])
     // we set up networking
     naettInit(NULL);
 
+    // we setup the tierlists
+    SetupAllTierListCallbacks();
     // we create the window and setup RayGUI
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetTraceLogLevel(LOG_ERROR);
@@ -27,10 +32,12 @@ INT main(INT argc, PCHAR argv[])
         BeginDrawing();
         ClearBackground(RGUIGetBackgroundColor());
         RenderCurrentState();
+        ErrRenderAllErrorWindows();
         EndDrawing();
     }
     RGUICleanup();
     CloseWindow();
+    FreeAllTierlists();
     
     return 0;
 }

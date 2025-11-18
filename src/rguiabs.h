@@ -15,6 +15,7 @@ VOID RGUIDrawTextEx(const PCHAR text, INT x, INT y, FLOAT fontSize, int property
 Color RGUIGetBackgroundColor();
 INT RGUIDropDownBox(const PCHAR text, INT x, INT y, INT width, INT height, int* active, BOOL editMode);
 Color RGUIGetTextColor();
+Color RGUIGetTextColorWhenFocused();
 INT RGUIDrawButton(const PCHAR text, INT x, INT y, INT width, INT height);
 INT RGUIDrawTextBox(const PCHAR text, INT x, INT y, INT width, INT height, FLOAT textAmount, BOOL editMode);
 INT RGUIDrawWindow(const PCHAR text, INT x, INT y, INT width, INT height);

@@ -1,14 +1,17 @@
 #include "search.h"
+#include "error.h"
 #include "extern/naett/naett.h"
+#include "extern/tinycthread/tinycthread.h"
+#include "osabs/osabs.h"
 #include "result.h"
 #include "state.h"
 #include "states/searchstate.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <Shlwapi.h>
-#include <winuser.h>
 #include <time.h>
 #include "extern/yyjson/yyjson.h"
+#include "lists/tierlists.h"
+
 static UINT8 sWhere = 0;
 static CHAR uuid[40] = {0};
 static CHAR headPath[255] = {0};
@@ -19,7 +22,7 @@ static CHAR headPath[255] = {0};
 
 static inline BOOL FillUUID(PCHAR username){
     CHAR url[URL_SIZE];
-    sprintf_s(url, URL_SIZE, "https://api.mojang.com/users/profiles/minecraft/%s", username);
+    safe_sprintf(url, URL_SIZE, "https://api.mojang.com/users/profiles/minecraft/%s", username);
     naettReq* req = naettRequestWithOptions(url, 0, NULL);
     naettRes* res = naettMake(req);
     while(!naettComplete(res)){
@@ -40,7 +43,7 @@ static inline BOOL FillUUID(PCHAR username){
     if(value == NULL) return FALSE;
     yyjson_val* getUUID = yyjson_obj_get(value, "id");
     if(getUUID == NULL) return FALSE;
-    sprintf_s(uuid, 40, "%s", yyjson_get_str(getUUID));
+    safe_sprintf(uuid, 40, "%s", yyjson_get_str(getUUID));
     yyjson_doc_free(jsonDoc);
     free((void*)body);
     return TRUE;
@@ -49,7 +52,7 @@ static inline BOOL FillUUID(PCHAR username){
 
 static inline BOOL GetPlayerHead(PCHAR username){
     CHAR url[URL_SIZE];
-    sprintf_s(url, URL_SIZE, "https://www.mc-heads.net/head/%s", username);
+    safe_sprintf(url, URL_SIZE, "https://www.mc-heads.net/head/%s", username);
 
 
     naettReq* req = naettRequestWithOptions(url, 0, NULL);
@@ -66,48 +69,31 @@ static inline BOOL GetPlayerHead(PCHAR username){
     printf("head image size is %d\n", bodyLength);
 
 
-    CHAR temppath[100];
-    // TODO: in like 10 years use GetTempPath2A when everyone is on 11 or up
-    GetTempPathA(100, temppath);
     CHAR headpath[255];
-    sprintf_s(headpath, 255, "%s\\mctiers\\head.png", temppath);
+    safe_sprintf(headpath, 255, "head.png");
     printf("\nHead is going to be stored at %s\n", headpath);
 
-    // we use this to check if the path even exists, if not we create it
-    // yes ik useless and for one case but idrc
-    CHAR path[255];
-    sprintf_s(path, 255, "%s\\mctiers", temppath);
-    if(!PathFileExistsA(path)){
-        CreateDirectoryA(path, NULL);
-    }
-
+   
     // yes i ran out of names
-    strcpy_s(headPath, 255, headpath);
-    HANDLE hFile = CreateFileA(headpath, GENERIC_READ | GENERIC_WRITE, 0, NULL,
-                                CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL , NULL);
-    if(hFile == INVALID_HANDLE_VALUE){
-        printf("failed with status of %lu\n", GetLastError());
+    safe_strcpy(headPath, 255, headpath);
+    FILE* fp = fopen(headpath, "wb");
+    if(!fp){
         return FALSE;
     }
-    BOOL result = WriteFile(hFile, body, bodyLength, NULL, NULL);
-    if(result == FALSE){
-        return FALSE;
-    }
-    CloseHandle(hFile);
+    fwrite(body, bodyLength, 1, fp);
+    fclose(fp);
     free((void*)body);
     return TRUE;
 }
 
-static DWORD WINAPI SearchThreadEntry(){
+static INT SearchThreadEntry(){
     if(FillUUID(ReturnSearchInput()) == FALSE){
-        MessageBoxW(NULL, L"Invalid Name",
-                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ErrCreateErrorWindow("Invalid Name");
         ChangeState(SEARCH_STATE);
         return 1;
     }
     if(GetPlayerHead(ReturnSearchInput()) == FALSE){
-        MessageBoxW(NULL, L"Error: Couldn't obtain player head",
-                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ErrCreateErrorWindow("Couldn't get Player Head");
         ChangeState(SEARCH_STATE);
         return 1;
     }
@@ -115,21 +101,22 @@ static DWORD WINAPI SearchThreadEntry(){
     
     PlayerInfo info;
 
-    strcpy_s(info.name, 17, ReturnSearchInput());
-    strcpy_s(info.playerHeadPath, 255, headPath);
+    safe_strcpy(info.name, 17, ReturnSearchInput());
+    safe_strcpy(info.playerHeadPath, 255, headPath);
     info.pointsReserved = 0;
     SetupPlayerInfo(info);
 
     // format because theres three (3) (yes three) sites where people check their tiers
     CHAR url[URL_SIZE];
-    if(sWhere == 0){
-        sprintf_s(url, URL_SIZE, "https://mctiers.com/api/rankings/%s", uuid);
-    } else if(sWhere == 1){
-        sprintf_s(url, URL_SIZE, "https://subtiers.net/api/rankings/%s", uuid);
-    } else {
-        sprintf_s(url, URL_SIZE, "https://pvptiers.com/api/rankings/%s", uuid);
-    }
-
+    // if(sWhere == 0){
+    //     safe_sprintf(url, URL_SIZE, "https://mctiers.com/api/rankings/%s", uuid);
+    // } else if(sWhere == 1){
+    //     safe_sprintf(url, URL_SIZE, "https://subtiers.net/api/rankings/%s", uuid);
+    // } else {
+    //     safe_sprintf(url, URL_SIZE, "https://pvptiers.com/api/rankings/%s", uuid);
+    // }
+    safe_sprintf(url, URL_SIZE, "%s%s", 
+                ReturnTierList(sWhere)->UrlBeginning(), uuid);
     naettReq* req = naettRequestWithOptions(url, 0, NULL);
     naettRes* res = naettMake(req);
     while(naettComplete(res) == FALSE){
@@ -141,8 +128,7 @@ static DWORD WINAPI SearchThreadEntry(){
 
     yyjson_doc* jsonDoc = yyjson_read(body, bodyLength, 0);
     if(jsonDoc == NULL){
-        MessageBoxW(NULL, L"Couldn't parse body, does the player exist in this tierlist?",
-                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ErrCreateErrorWindow("Couldn't parse body, does the player exist in this tierlist?");
         free((void*)body);
         ChangeState(SEARCH_STATE);
         return 1;
@@ -150,8 +136,7 @@ static DWORD WINAPI SearchThreadEntry(){
     yyjson_val* root = yyjson_doc_get_root(jsonDoc);
     
     if(root == NULL){
-        MessageBoxW(NULL, L"Couldn't find root",
-                    L"Native MCTiers", MB_OK | MB_ICONERROR);
+        ErrCreateErrorWindow("Couldn't find root!");
         yyjson_doc_free(jsonDoc);
         free((void*)body);
         ChangeState(SEARCH_STATE);
@@ -162,8 +147,7 @@ static DWORD WINAPI SearchThreadEntry(){
     yyjson_obj_foreach(root, idx, max, main, tier) {
         TierInfo tInfo = {0};
         if(main == NULL || tier == NULL){
-            MessageBoxW(NULL, L"main or tier is null",
-                        L"Native MCTiers", MB_OK | MB_ICONERROR);
+            ErrCreateErrorWindow("Main or Tier is NULL");
             yyjson_doc_free(jsonDoc);
             free((void*)body);
             ChangeState(SEARCH_STATE);
@@ -178,8 +162,7 @@ static DWORD WINAPI SearchThreadEntry(){
         if(curTier == NULL || horl == NULL || peak_tier == NULL 
                 || peakhorl == NULL || isRetired == NULL || attained == NULL)
         {
-            MessageBoxW(NULL, L"Error parsing json",
-                        L"Native MCTiers", MB_OK | MB_ICONERROR);
+            ErrCreateErrorWindow("Error parsing JSON");
             yyjson_doc_free(jsonDoc);
             free((void*)body);
             ChangeState(SEARCH_STATE);
@@ -193,14 +176,14 @@ static DWORD WINAPI SearchThreadEntry(){
             size_t result = _strftime_l(tInfo.timeGotten, 32, "%D", &lt, NULL);
             if(result == 0){
                 printf("ERROR, COULDN'T GET TIME!\n");
-                sprintf_s(tInfo.timeGotten, 32, "UNKNOWN");
+                safe_sprintf(tInfo.timeGotten, 32, "UNKNOWN");
             }
         } else {
             printf("ERROR, COULDN'T GET LOCALTIME!\n");
-            sprintf_s(tInfo.timeGotten, 32, "UNKNOWN");
+            safe_sprintf(tInfo.timeGotten, 32, "UNKNOWN");
         }
         printf("%s\n", yyjson_get_str(main));
-        strcpy_s(tInfo.tierName, 90, yyjson_get_str(main));
+        safe_strcpy(tInfo.tierName, 90, yyjson_get_str(main));
         tInfo.tier = yyjson_get_int(curTier);
         tInfo.HorL = yyjson_get_int(horl);
         tInfo.peakTier = yyjson_get_int(peak_tier);
@@ -208,7 +191,7 @@ static DWORD WINAPI SearchThreadEntry(){
         tInfo.isRetired = yyjson_get_bool(isRetired);
         AddTier(tInfo);
     }
-    CalculatePlayerPoints(sWhere);
+    ReturnTierList(sWhere)->CalculatePlayerPoints();
     yyjson_doc_free(jsonDoc);
     free((void*)body);
     ChangeState(RESULT_STATE);
@@ -223,5 +206,6 @@ static DWORD WINAPI SearchThreadEntry(){
 VOID BeginSearch(UINT8 where){
     sWhere = where;
     ChangeState(LOADING_STATE);
-    SHCreateThread(SearchThreadEntry, NULL, 0, NULL);
+    thrd_t thrd;
+    thrd_create(&thrd, SearchThreadEntry, NULL);
 }

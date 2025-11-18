@@ -10,8 +10,7 @@
 
 
 
-#include "extern/raylib/raylibin.h"
-
+#include "types.h"
 
 typedef enum _SearchType {
     SEARCH_STATE,
