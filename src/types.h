@@ -18,18 +18,16 @@ typedef unsigned short      WORD;
 typedef float               FLOAT;
 typedef FLOAT*              PFLOAT;
 typedef BOOL*               PBOOL;
-typedef BYTE*               PBYTE;
 typedef int*                PINT;
-typedef WORD*               PWORD;
 typedef long*                LONG;
 
 typedef int                 INT;
 typedef unsigned int        UINT;
 typedef unsigned int        *PUINT;
 typedef void                VOID;
-typedef voidClass           *PVOID;
 
 typedef unsigned long       UINT64;
+typedef unsigned int        UINT32;
 
 typedef unsigned char       UINT8;
 typedef char                CHAR;

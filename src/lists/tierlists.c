@@ -4,7 +4,6 @@
 #include "subtiers/subtiers.h"
 #include "../error.h"
 
-#include <Windows.h>
 #include <stdlib.h>
 
 
