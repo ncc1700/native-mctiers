@@ -1,6 +1,5 @@
 #include "loadingstate.h"
 #include "../rguiabs.h"
-#include <wtypesbase.h>
 
 
 

@@ -3,7 +3,7 @@
 
 
 
-
+typedef double DOUBLE ;
 
 
 #ifdef _WIN32

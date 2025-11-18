@@ -2,7 +2,6 @@
 #include "../result.h"
 #include "../state.h"
 #include <stdio.h>
-#include <winnt.h>
 #include "../rguiabs.h"
 #include "searchstate.h"
 #include "../osabs/osabs.h"
