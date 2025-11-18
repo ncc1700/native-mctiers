@@ -87,12 +87,12 @@ static inline BOOL GetPlayerHead(PCHAR username){
 
    
     // yes i ran out of names
-    safe_sprintf(headpath, 255, "%s", headpath);
-    FILE* fp = fopen(headpath, "w");
+    safe_sprintf(headPath, 256, "%s", headpath);
+    FILE* fp = fopen(headpath, "wb");
     if(!fp){
         return FALSE;
     }
-    fwrite(body, bodyLength, 1, fp);
+    fwrite(body, 1, bodyLength, fp);
     fclose(fp);
     free((void*)body);
     return TRUE;

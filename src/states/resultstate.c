@@ -50,7 +50,6 @@ VOID ResultState(){
         texture = LoadTextureFromImage(image);
         init = TRUE;
     }
-    
     DrawRectangle(0, 200, GetScreenWidth(), GetScreenHeight() - 200, BLACK);
     int i = 220;
     while(list != NULL){
