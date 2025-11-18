@@ -41,7 +41,10 @@
 #define __MACOS__ 1
 #endif
 #endif
-
+#include <string.h>
+#include <assert.h>
+#include <stdlib.h>
+ 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
 
 typedef struct KVLink {
