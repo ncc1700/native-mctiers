@@ -4,8 +4,8 @@
 
 
 
-
 #include "extern/raylib/raylibin.h"
+#include "types.h"
 
 
 VOID RGUIInit(char* style);
