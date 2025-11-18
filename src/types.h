@@ -29,10 +29,11 @@ typedef unsigned int        *PUINT;
 typedef void                VOID;
 typedef voidClass           *PVOID;
 
-typedef unsigned int        UINT;
+typedef unsigned long       UINT64;
 
 typedef unsigned char       UINT8;
 typedef char                CHAR;
+typedef char*               PCHAR;
 typedef voidClass           *PVOID;
 #endif
 
