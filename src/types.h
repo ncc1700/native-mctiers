@@ -7,7 +7,6 @@
 
 
 #ifdef _WIN32
-
 #define _AMD64_
 #include <minwindef.h>
 #elif __linux__
@@ -19,8 +18,9 @@ typedef float               FLOAT;
 typedef FLOAT*              PFLOAT;
 typedef BOOL*               PBOOL;
 typedef int*                PINT;
-typedef long*                LONG;
-
+typedef long*               LONG;
+#define TRUE                1
+#define FALSE               0
 typedef int                 INT;
 typedef unsigned int        UINT;
 typedef unsigned int        *PUINT;
