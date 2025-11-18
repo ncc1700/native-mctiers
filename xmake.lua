@@ -1,7 +1,7 @@
 target("mctiers-re")
     add_files("src/*.c")
     if is_os("windows") then
-        add_links("gdi32", "kernel32", "user32")
+        add_links("gdi32", "kernel32", "user32", "opengl32")
     else
-        add_links("X11")
+        add_links("X11", "gl")
     end
