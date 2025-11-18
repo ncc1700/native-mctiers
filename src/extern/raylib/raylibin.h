@@ -6,8 +6,9 @@
 
 
 #include "raylib.h"
+#ifdef _WIN32
 #include "raylib_win32.h"
-
+#endif
 
 
 
