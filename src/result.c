@@ -40,8 +40,7 @@ VOID AddTier(TierInfo info){
 
 
 VOID SetupPlayerInfo(PlayerInfo info){
-    memcpy_s(&pInfo, 
-             sizeof(PlayerInfo), 
+    memcpy(&pInfo, 
              &info, 
              sizeof(PlayerInfo));
 }
