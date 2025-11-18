@@ -23,24 +23,24 @@ INT main(INT argc, PCHAR argv[])
         printf("h\n");
 
     // we setup the tierlists
-    //SetupAllTierListCallbacks();
+    SetupAllTierListCallbacks();
         printf("h\n");
 
     // we create the window and setup RayGUI
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetTraceLogLevel(LOG_ERROR);
-    SetTargetFPS(config.targetfps);
-    InitWindow(700, 700, "Native Mctiers");
-    RGUIInit(config.style);
-    while(!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(RGUIGetBackgroundColor());
-        RenderCurrentState();
-        ErrRenderAllErrorWindows();
-        EndDrawing();
-    }
-    RGUICleanup();
-    CloseWindow();
+    // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    // SetTraceLogLevel(LOG_ERROR);
+    // SetTargetFPS(config.targetfps);
+    // InitWindow(700, 700, "Native Mctiers");
+    // RGUIInit(config.style);
+    // while(!WindowShouldClose()){
+    //     BeginDrawing();
+    //     ClearBackground(RGUIGetBackgroundColor());
+    //     RenderCurrentState();
+    //     ErrRenderAllErrorWindows();
+    //     EndDrawing();
+    // }
+    // RGUICleanup();
+    // CloseWindow();
     FreeAllTierlists();
     
     return 0;
