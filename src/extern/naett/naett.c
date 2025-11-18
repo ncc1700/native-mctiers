@@ -57,6 +57,15 @@ char* strdup(const char* string) {
     return copy;
 }
 
+char* strndup(const char* string, unsigned long size) {
+    char* copy = NULL;
+    copy = malloc(size);
+    if(copy == NULL) return NULL;
+    memcpy(copy, string, size);
+    copy[strlen(string) + 1] = '\0';
+    return copy;
+}
+
 
 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
