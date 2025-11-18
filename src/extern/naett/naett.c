@@ -67,10 +67,10 @@ char* strndup(const char* string, unsigned long size) {
 }
 
 void usleep(long microseconds) {
-    struct timespec ts;
-    ts.tv_sec  = microseconds / 1000000;
-    ts.tv_nsec = (microseconds % 1000000) * 1000;
-    nanosleep(&ts, NULL);
+    // struct timespec ts;
+    // ts.tv_sec  = microseconds / 1000000;
+    // ts.tv_nsec = (microseconds % 1000000) * 1000;
+    // nanosleep(&ts, NULL);
 }
 
 
