@@ -47,7 +47,24 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+char* strdup(const char* string) {
+    size_t size = strlen(string) + 1;
+    char* copy = NULL;
+    copy = malloc(size);
+    if(copy == NULL) return NULL;
+    memcpy(copy, string, size);
+    copy[strlen(string) + 1] = '\0';
+    return copy;
+}
 
+char* strndup(const char* string, size_t size) {
+    char* copy = NULL;
+    copy = malloc(size + 1);
+    if(copy == NULL) return NULL;
+    memcpy(copy, string, size);
+    copy[strlen(string) + 1] = '\0';
+    return copy;
+}
 
 void usleep(long microseconds) {
     // struct timespec ts;
