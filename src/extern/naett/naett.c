@@ -66,9 +66,7 @@ char* strndup(const char* string, unsigned long size) {
     return copy;
 }
 
-VOID usleep(unsigned long amount){
 
-}
 
 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
