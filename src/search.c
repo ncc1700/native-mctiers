@@ -75,7 +75,7 @@ static inline BOOL GetPlayerHead(PCHAR username){
 
    
     // yes i ran out of names
-    safe_strcpy(headPath, 255, headpath);
+    safe_sprintf(headpath, 255, "%s", headpath);
     FILE* fp = fopen(headpath, "wb");
     if(!fp){
         return FALSE;
@@ -100,9 +100,8 @@ static INT SearchThreadEntry(){
 
     
     PlayerInfo info;
-
-    safe_strcpy(info.name, 17, ReturnSearchInput());
-    safe_strcpy(info.playerHeadPath, 255, headPath);
+    safe_sprintf(info.name, 17, "%s", ReturnSearchInput());
+    safe_sprintf(info.playerHeadPath, 255, "%s", headPath);
     info.pointsReserved = 0;
     SetupPlayerInfo(info);
 
@@ -183,7 +182,7 @@ static INT SearchThreadEntry(){
             safe_sprintf(tInfo.timeGotten, 32, "UNKNOWN");
         }
         printf("%s\n", yyjson_get_str(main));
-        safe_strcpy(tInfo.tierName, 90, yyjson_get_str(main));
+        safe_sprintf(tInfo.tierName, 90, "%s", yyjson_get_str(main));
         tInfo.tier = yyjson_get_int(curTier);
         tInfo.HorL = yyjson_get_int(horl);
         tInfo.peakTier = yyjson_get_int(peak_tier);

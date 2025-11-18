@@ -1,6 +1,7 @@
 #include "result.h"
 #include "error.h"
 #include "osabs/osabs.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -21,8 +22,8 @@ VOID AddTier(TierInfo info){
         ErrCreateErrorWindow("Ran out of memory, result might not be accurate");
         return;
     }
-    safe_strcpy(newList->info.tierName, 90, info.tierName);
-    safe_strcpy(newList->info.timeGotten, 10, info.timeGotten);
+    safe_sprintf(newList->info.tierName, 90, "%s", info.tierName);
+    safe_sprintf(newList->info.timeGotten, 90, "%s", info.timeGotten);
     newList->info.tier = info.tier;
     newList->info.HorL = info.HorL;
     newList->info.isRetired = info.isRetired;
