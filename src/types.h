@@ -32,7 +32,6 @@ typedef unsigned int        UINT32;
 typedef unsigned char       UINT8;
 typedef char                CHAR;
 typedef char*               PCHAR;
-typedef voidClass           *PVOID;
 #endif
 
 
