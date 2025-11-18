@@ -2,7 +2,7 @@
 #include "../rguiabs.h"
 #include <stdio.h>
 #include "../search.h"
-
+#include "../osabs/osabs.h"
 static CHAR data[MAX_NAME_LENGTH];
 
 
@@ -11,7 +11,7 @@ PCHAR ReturnSearchInput(){
 }
 
 VOID ClearSearchData(){
-    sprintf_s(data, MAX_NAME_LENGTH, "");
+    safe_sprintf(data, MAX_NAME_LENGTH, "");
 }
 
 VOID RenderSearchState(){
