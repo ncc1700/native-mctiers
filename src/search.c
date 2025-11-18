@@ -27,7 +27,7 @@ static inline void os_sleep(int seconds){
     #ifdef _WIN32
     Sleep(seconds * 1000);
     #elif __linux__
-    sleep(seconds)
+    sleep(seconds);
     #endif
 }
 
