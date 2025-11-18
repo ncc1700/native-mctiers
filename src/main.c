@@ -6,6 +6,7 @@
 #include "rguiabs.h"
 #include "state.h"
 #include <stddef.h>
+#include <stdio.h>
 #define DEBUG
 
 #ifndef DEBUG
@@ -16,12 +17,15 @@ INT main(INT argc, PCHAR argv[])
 {
     // we parse the config.json config file, if fails itll kill the process itself
     Config config = HandleConfig();
-
+    printf("h\n");
     // we set up networking
     naettInit(NULL);
+        printf("h\n");
 
     // we setup the tierlists
     SetupAllTierListCallbacks();
+        printf("h\n");
+
     // we create the window and setup RayGUI
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     SetTraceLogLevel(LOG_ERROR);

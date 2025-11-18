@@ -41,12 +41,15 @@
 #define __MACOS__ 1
 #endif
 #endif
+
+#ifdef __linux
 #define _GNU_SOURCE
 #include <strings.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+
 char* strdup(const char* string) {
     size_t size = strlen(string) + 1;
     char* copy = NULL;
@@ -72,7 +75,7 @@ void usleep(long microseconds) {
     // ts.tv_nsec = (microseconds % 1000000) * 1000;
     // nanosleep(&ts, NULL);
 }
-
+#endif
 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
 
