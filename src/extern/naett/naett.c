@@ -42,7 +42,7 @@
 #endif
 #endif
 #define _GNU_SOURCE
-#include <string.h>
+#include <strings.h>
 #include <assert.h>
 #include <stdlib.h>
  
