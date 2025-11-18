@@ -21,6 +21,6 @@ target("nativemctiers")
         --add_cxflags("-fsanitize=address");
         add_linkdirs("lib/linux") 
         add_links("libraylib.a")
-        --add_syslinks("asan");
+        add_syslinks("curl");
     end
 
