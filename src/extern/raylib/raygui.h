@@ -3194,7 +3194,7 @@ int GuiValueBoxFloat(Rectangle bounds, const char *text, char *textValue, float 
                 }
             }
 
-            //if (valueHasChanged) *value = TextToFloat(textValue);
+            if (valueHasChanged) *value = TextToFloat(textValue);
 
             if ((IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)) || (!CheckCollisionPointRec(mousePoint, bounds) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) result = 1;
         }
