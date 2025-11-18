@@ -56,6 +56,8 @@ char* strdup(const char* string) {
     return copy;
 }
 
+
+
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
 
 typedef struct KVLink {
@@ -821,7 +823,8 @@ void naettPlatformCloseResponse(InternalResponse* res) {
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-
+#include <stdio.h>
+#include <stdlib.h>
 static pthread_t workerThread;
 static int handleReadFD = 0;
 static int handleWriteFD = 0;
