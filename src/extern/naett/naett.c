@@ -5,7 +5,7 @@
 #ifndef NAETT_INTERNAL_H
 #define NAETT_INTERNAL_H
 
-#ifdef _WIN32
+#ifdef _MSC_VER
     #define strcasecmp _stricmp
     #undef strdup
     #define strdup _strdup
@@ -44,6 +44,17 @@
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
+ 
+
+char* strdup(const char* string) {
+    size_t size = strlen(string) + 1;
+    char* copy = NULL;
+    copy = malloc(size);
+    if(copy == NULL) return NULL;
+    memcpy(copy, string, size);
+    copy[strlen(string) + 1] = '\0';
+    return copy;
+}
 
 #define naettAlloc(TYPE, VAR) TYPE* VAR = (TYPE*)calloc(1, sizeof(TYPE))
 
