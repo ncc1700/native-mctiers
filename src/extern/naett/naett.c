@@ -41,6 +41,7 @@
 #define __MACOS__ 1
 #endif
 #endif
+#define _GNU_SOURCE
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
