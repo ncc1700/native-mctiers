@@ -36,6 +36,12 @@ typedef unsigned int        UINT;
 typedef unsigned int        *PUINT;
 typedef void                VOID;
 typedef voidClass           *PVOID;
+
+typedef unsigned int        UINT;
+
+typedef unsigned char       UINT8;
+typedef char                CHAR;
+typedef voidClass           *PVOID;
 #endif
 
 
