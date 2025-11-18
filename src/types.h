@@ -10,7 +10,7 @@
 
 #define _AMD64_
 #include <minwindef.h>
-#elif 
+#elif __linux__
 typedef unsigned long       DWORD;
 typedef int                 BOOL;
 typedef unsigned char       BYTE;
