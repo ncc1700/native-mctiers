@@ -1,8 +1,0 @@
-.xmake/
-build/
-*.exe
-nativemctiers.lib
-*.exp
-temp/
-*.res
-*.png

@@ -1,0 +1,8 @@
+{
+    cmdlines = {
+        "xmake run",
+        "xmake run",
+        "xmake run",
+        "xmake run"
+    }
+}

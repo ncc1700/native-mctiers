@@ -1,43 +1,34 @@
-#include "config.h"
-#include "error.h"
-#include "extern/naett/naett.h"
-#include "extern/raylib/raygui.h"
-#include "lists/tierlists.h"
-#include "rguiabs.h"
-#include "state.h"
-#include <stddef.h>
-#define DEBUG
 
-#ifndef DEBUG
-INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
-#else 
-INT main(INT argc, PCHAR argv[])
-#endif
+
+//Make it so we don't need to include any other C files in our build.
+#define CNFG_IMPLEMENTATION
+
+#include "rawdraw_sf.h"
+
+void HandleKey( int keycode, int bDown ) { }
+void HandleButton( int x, int y, int button, int bDown ) { }
+void HandleMotion( int x, int y, int mask ) { }
+int HandleDestroy() { return 0; }
+int main()
 {
-    // we parse the config.json config file, if fails itll kill the process itself
-    Config config = HandleConfig();
+	CNFGSetup( "Example App", 1024, 768 );
+	while(CNFGHandleInput())
+	{
+		CNFGBGColor = 0x000080ff; //Dark Blue Background
 
-    // we set up networking
-    naettInit(NULL);
+		short w, h;
+		CNFGClearFrame();
+		CNFGGetDimensions( &w, &h );
 
-    // we setup the tierlists
-    SetupAllTierListCallbacks();
-    // we create the window and setup RayGUI
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    SetTraceLogLevel(LOG_ERROR);
-    SetTargetFPS(config.targetfps);
-    InitWindow(700, 700, "Native Mctiers");
-    RGUIInit(config.style);
-    while(!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(RGUIGetBackgroundColor());
-        RenderCurrentState();
-        ErrRenderAllErrorWindows();
-        EndDrawing();
-    }
-    RGUICleanup();
-    CloseWindow();
-    FreeAllTierlists();
-    
-    return 0;
+		//Change color to white.
+		CNFGColor( 0xffffffff ); 
+
+		CNFGPenX = 1; CNFGPenY = 1;
+		CNFGDrawText( "Hello, World", 2 );
+        CNFGColor(0xFF0000FF);
+		CNFGTackRectangle(0, 0, 300, 300);
+
+		//Display the image and wait for time to display next frame.
+		CNFGSwapBuffers();		
+	}
 }
