@@ -23,7 +23,7 @@ INT main(INT argc, PCHAR argv[])
         printf("h\n");
 
     // we setup the tierlists
-    SetupAllTierListCallbacks();
+    //SetupAllTierListCallbacks();
         printf("h\n");
 
     // we create the window and setup RayGUI
